@@ -23,17 +23,12 @@ public class ProductoServiceImp implements ProductoService{
 
     @Override
     public Productos getProducto(Long id){
-        String url="https://6440a1b3fadc69b8e06f45f1.mockapi.io/productos/";
-        System.out.println(url+id);
-        Productos response= restTemplate.getForObject(url+id, Productos.class);
-        return response;
+        return productorepository.findById(id).get();
     }
 
     @Override
     public List<Productos> allProducto() {
-        String url="https://6440a1b3fadc69b8e06f45f1.mockapi.io/productos";
-        Productos[] response= restTemplate.getForObject(url, Productos[].class);
-        return Arrays.asList(response);
+        return productorepository.findAll();
     }
 
     @Override

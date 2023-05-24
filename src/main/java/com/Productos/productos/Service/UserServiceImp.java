@@ -2,7 +2,6 @@ package com.Productos.productos.Service;
 
 import com.Productos.productos.Models.User;
 import com.Productos.productos.Repository.UserRepository;
-
 import com.Productos.productos.Utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public Boolean updateUser(Long id, User user) {
+    public Boolean UpdateUser(Long id, User user) {
         try {
             User userBD = userRepository.findById(id).get();
             userBD.setFirstName(user.getFirstName());

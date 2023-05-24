@@ -2,6 +2,7 @@ package com.Productos.productos.Controller;
 
 import com.Productos.productos.Models.Productos;
 import com.Productos.productos.Service.ProductoServiceImp;
+import com.Productos.productos.Utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,23 @@ public class ProductoController {
 
     @Autowired
     private ProductoServiceImp productoServiceImp;
+    @Autowired
+    private JWTUtil jwtUtil;
+
+    private Boolean validateToken(String token){
+        try{
+            if(jwtUtil.getKey(token) != null){
+                return true;
+            }
+            return  false;
+        }catch (Exception e){
+            return  false;
+        }
+    }
 
     @GetMapping(value = "/producto/{id}")
-    public ResponseEntity findProductoById(@PathVariable Long id){
-
+    public ResponseEntity findProductoById(@PathVariable Long id,@RequestHeader(value = "Authorization") String token){
+        if(!validateToken(token)){return new ResponseEntity<>("Token invalido",HttpStatus.UNAUTHORIZED);}
         Map response = new HashMap();
         try {
             return new ResponseEntity(productoServiceImp.getProducto(id), HttpStatus.OK);
@@ -29,7 +43,8 @@ public class ProductoController {
         }
     }
     @GetMapping(value = "/producto")
-    public ResponseEntity findAllProducto(){
+    public ResponseEntity findAllProducto(@RequestHeader(value = "Authorization") String token){
+        if(!validateToken(token)){return new ResponseEntity<>("Token invalido",HttpStatus.UNAUTHORIZED);}
         Map response = new HashMap();
         try {
             return new ResponseEntity(productoServiceImp.allProducto(), HttpStatus.OK);
@@ -40,7 +55,8 @@ public class ProductoController {
         }
     }
     @PostMapping(value = "/producto")
-    public ResponseEntity saveProducto(){
+    public ResponseEntity saveProducto(@RequestHeader(value = "Authorization") String token){
+        if(!validateToken(token)){return new ResponseEntity<>("Token invalido",HttpStatus.UNAUTHORIZED);}
         Map response = new HashMap();
         Boolean userResp = productoServiceImp.createProducto();
 
@@ -56,17 +72,18 @@ public class ProductoController {
 
     @PutMapping(value = "/producto/{id}")
 
-    public ResponseEntity updateAutomovil(@PathVariable Long id, @RequestBody Productos productos){
+    public ResponseEntity updateAutomovil(@PathVariable Long id, @RequestBody Productos productos,@RequestHeader(value = "Authorization") String token){
+        if(!validateToken(token)){return new ResponseEntity<>("Token invalido",HttpStatus.UNAUTHORIZED);}
         Map response = new HashMap();
         Boolean userResp = productoServiceImp.updateProducto(id,productos);
 
         if(userResp == true){
             response.put("status", "200");
-            response.put("message","Se actualizo el vehiculo");
+            response.put("message","Se actualizo el producto");
             return new ResponseEntity(response, HttpStatus.OK);
         }
         response.put("status","400");
-        response.put("message","Hubo un error al actualizar el vehiculo");
+        response.put("message","Hubo un error al actualizar el producto");
         return new ResponseEntity(response,HttpStatus.BAD_REQUEST);
     }
 
