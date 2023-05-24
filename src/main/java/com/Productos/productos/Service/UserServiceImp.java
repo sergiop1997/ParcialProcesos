@@ -56,7 +56,7 @@ public class UserServiceImp implements UserService{
     public String login(User user) {
         Optional<User> userBd = userRepository.findByEmail(user.getEmail());
         if(userBd.isEmpty()){
-            throw new RuntimeException("Usuario no encontrado!");
+            throw new RuntimeException("Usuario no encontrado¡!");
         }
 
         if(!userBd.get().getPassword().equals(user.getPassword())){
