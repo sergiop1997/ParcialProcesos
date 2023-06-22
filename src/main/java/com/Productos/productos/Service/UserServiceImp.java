@@ -70,7 +70,7 @@ public class UserServiceImp implements UserService{
     public String login(User user) {
         Optional<User>userBd = userRepository.findByEmail(user.getEmail());
         if (userBd.isEmpty()){
-            throw new RuntimeException("Usuario no encontrado ");
+            throw new RuntimeException("Usuario no encontrado en la base de datos ");
         }
         if (!passwordEncoder.matches(user.getPassword(),userBd.get().getPassword())){
             throw new RuntimeException("Contraseña incorrecta ");
